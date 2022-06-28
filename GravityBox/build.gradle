@@ -1,7 +1,17 @@
 apply plugin: 'com.android.application'
 android {
     signingConfigs {
+        debug {
+            storeFile file('C:\\gits\\GravityBox\\GravityBox\\keystore.jks')
+            storePassword 'Glass123'
+            keyAlias 'key0'
+            keyPassword 'Glass123'
+        }
         release {
+        storeFile file('C:\\gits\\GravityBox\\GravityBox\\keystore.jks')
+            storePassword 'Glass123'
+            keyPassword 'Glass123'
+            keyAlias 'key0'
         }
     }
     compileSdkVersion 32
@@ -16,11 +26,13 @@ android {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'),
                     'proguard-rules.pro'
+            signingConfig signingConfigs.debug
         }
         release {
             minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android.txt'),
                     'proguard-rules.pro'
+            signingConfig signingConfigs.release
         }
     }
     compileOptions {
