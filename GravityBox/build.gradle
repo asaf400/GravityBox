@@ -1,38 +1,24 @@
 apply plugin: 'com.android.application'
 android {
-    signingConfigs {
-        debug {
-            storePassword 'Glass123'
-            keyPassword 'Glass123'
-            keyAlias 'key0'
-            storeFile file('C:\\gits\\GravityBox\\GravityBox\\keystore.jks')
-        }
-        release {
-        storeFile file('C:\\gits\\GravityBox\\GravityBox\\keystore.jks')
-            storePassword 'Glass123'
-            keyPassword 'Glass123'
-            keyAlias 'key0'
-        }
-    }
-    compileSdkVersion 31
+    compileSdkVersion 33
     defaultConfig {
         applicationId 'com.ceco.r.gravitybox'
-        minSdkVersion 31
+        minSdkVersion 33
         //noinspection OldTargetApi
-        targetSdkVersion 31
+        targetSdkVersion 33
     }
     buildTypes {
         debug {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'),
                     'proguard-rules.pro'
-            signingConfig signingConfigs.debug
+//            signingConfig signingConfigs.debug
         }
         release {
             minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android.txt'),
                     'proguard-rules.pro'
-            signingConfig signingConfigs.release
+//            signingConfig signingConfigs.release
         }
     }
     compileOptions {
@@ -41,7 +27,7 @@ android {
     }
     productFlavors {
     }
-    buildToolsVersion '31.0.0'
+    buildToolsVersion '33.0.0'
 }
 
 dependencies {
