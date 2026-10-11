@@ -106,13 +106,11 @@ public class LedSettingsActivity extends GravityBoxActivity implements OnClickLi
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        switch(item.getItemId()) {
-            case R.id.lc_settings_menu_reset:
-                resetToDefaults();
-                return true;
-            default:
-                return super.onOptionsItemSelected(item);
+        if (item.getItemId() == R.id.lc_settings_menu_reset) {
+            resetToDefaults();
+            return true;
         }
+        return super.onOptionsItemSelected(item);
     }
 
     private void resetToDefaults() {

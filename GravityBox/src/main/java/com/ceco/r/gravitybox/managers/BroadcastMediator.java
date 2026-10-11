@@ -94,7 +94,7 @@ public class BroadcastMediator {
             mInternalReceiverRegistered = false;
             if (DEBUG) log("reisterReceiverInternal: old internal receiver unregistered");
         }
-        mContext.registerReceiver(mReceiverInternal, mIntentFilter);
+        mContext.registerReceiver(mReceiverInternal, mIntentFilter, Context.RECEIVER_EXPORTED);
         mInternalReceiverRegistered = true;
         if (DEBUG) log("reisterReceiverInternal: new internal receiver registered");
     }

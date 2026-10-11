@@ -179,7 +179,8 @@ public abstract class TrafficMeterAbstract extends TextView
             IntentFilter filter = new IntentFilter();
             filter.addAction(ConnectivityManager.CONNECTIVITY_ACTION);
             filter.addAction(ModDownloadProvider.ACTION_DOWNLOAD_STATE_CHANGED);
-            getContext().registerReceiver(mIntentReceiver, filter, null, getHandler());
+            getContext().registerReceiver(mIntentReceiver, filter, null, getHandler(),
+                    Context.RECEIVER_EXPORTED);
  
             if (mPhone != null) {
                 mPhone.listen(mPhoneStateListener, PhoneStateListener.LISTEN_DATA_CONNECTION_STATE);

@@ -14,6 +14,8 @@
  */
 package com.ceco.r.gravitybox;
 
+import static android.content.Context.RECEIVER_EXPORTED;
+
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -54,11 +56,12 @@ public class ModInputMethod {
         }
     };
 
-    public static void initZygote(final XSharedPreferences prefs) {
-        if (DEBUG) log("initZygote");
+    public static void init(final XSharedPreferences prefs, final ClassLoader classLoader) {
+        if (DEBUG) log("init");
 
         try {
-            final Class<?> imeClass = XposedHelpers.findClass(CLASS_IME_SERVICE, null);
+            final Class<?> imeClass = XposedHelpers.findClassIfExists(CLASS_IME_SERVICE, classLoader);
+            if (imeClass == null) return;
 
             mVolKeyCursorControl = Integer.valueOf(prefs.getString(
                     GravityBoxSettings.PREF_KEY_VOL_KEY_CURSOR_CONTROL, "0"));
@@ -70,7 +73,7 @@ public class ModInputMethod {
                 protected void afterHookedMethod(MethodHookParam param) {
                     mService = (InputMethodService) param.thisObject;
                     mService.registerReceiver(mReceiver, new IntentFilter(
-                            GravityBoxSettings.ACTION_PREF_IME_CHANGED));
+                            GravityBoxSettings.ACTION_PREF_IME_CHANGED), RECEIVER_EXPORTED);
                     if (DEBUG) log("IME service created");
                 }
             });

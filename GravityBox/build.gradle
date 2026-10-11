@@ -1,22 +1,21 @@
 apply plugin: 'com.android.application'
 android {
-    compileSdkVersion 33
+    compileSdk 36
     defaultConfig {
         applicationId 'com.ceco.r.gravitybox'
-        minSdkVersion 33
-        //noinspection OldTargetApi
-        targetSdkVersion 33
+        minSdk 36
+        targetSdk 36
     }
     buildTypes {
         debug {
             minifyEnabled false
-            proguardFiles getDefaultProguardFile('proguard-android.txt'),
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'),
                     'proguard-rules.pro'
 //            signingConfig signingConfigs.debug
         }
         release {
             minifyEnabled true
-            proguardFiles getDefaultProguardFile('proguard-android.txt'),
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'),
                     'proguard-rules.pro'
 //            signingConfig signingConfigs.release
         }
@@ -27,12 +26,12 @@ android {
     }
     productFlavors {
     }
-    buildToolsVersion '33.0.0'
+    namespace 'com.ceco.r.gravitybox'
 }
 
 dependencies {
     compileOnly 'de.robv.android.xposed:api:82'
     implementation 'com.google.android.material:material:1.6.1'
     implementation 'androidx.palette:palette:1.0.0'
-    api 'com.theartofdev.edmodo:android-image-cropper:2.8.+'
+    implementation 'com.vanniktech:android-image-cropper:4.7.0'
 }

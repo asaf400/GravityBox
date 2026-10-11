@@ -1,8 +1,8 @@
 GravityBox
 ==========
 
-Fork notes: Compiled for running on Android 13 (T)
-XPosed Tweak Box for devices running Android 13 (T)
+Fork notes: Compiled for running on Android 16 (API 36)
+XPosed Tweak Box for devices running Android 16 (API 36)
 
 Visit the [official support thread](https://forum.xda-developers.com/t/app-r-xposed-gravitybox-v11-0-5-for-android-11-08-08-2021.4213047/page-29#post-87075427) at XDA for more info.
 

@@ -53,7 +53,7 @@ public class SysUiPackageManager {
                 }
             }
         };
-        context.registerReceiver(broadcasReceiver, intentFilter);
+        context.registerReceiver(broadcasReceiver, intentFilter, Context.RECEIVER_EXPORTED);
 
         if (DEBUG) log("PACKAGE_ADDED receiver registered");
     }

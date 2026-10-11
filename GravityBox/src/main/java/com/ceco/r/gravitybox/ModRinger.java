@@ -127,7 +127,7 @@ public class ModRinger {
                     IntentFilter intentFilter = new IntentFilter();
                     intentFilter.addAction(IncreasingRingPreference.ACTION_INCREASING_RING_CHANGED);
                     intentFilter.addAction(QuietHoursActivity.ACTION_QUIET_HOURS_CHANGED);
-                    context.registerReceiver(mBroadcastReceiver, intentFilter);
+                    context.registerReceiver(mBroadcastReceiver, intentFilter, Context.RECEIVER_EXPORTED);
                     if (DEBUG) log("TelecomServiceImpl created; broadcast receiver registered");
                 }
             });

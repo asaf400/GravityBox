@@ -116,7 +116,8 @@ public class MissedCallNotifier {
                 if (!n.extras.containsKey(EXTRA_FROM_GB) && pkgName.equals(ModTelecom.PACKAGE_NAME) && 
                         (Integer)param.args[1] == MISSED_CALL_NOTIF_ID) {
                     if (mNotifOnNextScreenOff == null) {
-                        context.registerReceiver(mScreenOffReceiver, new IntentFilter(Intent.ACTION_SCREEN_OFF));
+                        context.registerReceiver(mScreenOffReceiver, new IntentFilter(Intent.ACTION_SCREEN_OFF),
+                                Context.RECEIVER_EXPORTED);
                         if (DEBUG) log("Scheduled missed call notification for next screen off");
                     }
                     mNotifOnNextScreenOff = n;

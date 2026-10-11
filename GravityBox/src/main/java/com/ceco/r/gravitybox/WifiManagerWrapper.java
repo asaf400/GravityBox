@@ -95,7 +95,7 @@ public class WifiManagerWrapper {
         };
 
         IntentFilter intentFilter = new IntentFilter(WIFI_AP_STATE_CHANGED_ACTION);
-        mContext.registerReceiver(mApStateChangeReceiver, intentFilter);
+        mContext.registerReceiver(mApStateChangeReceiver, intentFilter, Context.RECEIVER_EXPORTED);
     }
 
     public int getWifiState() {

@@ -221,7 +221,7 @@ public class UnlockActivity extends GravityBoxActivity implements GravityBoxResu
 
         private void register() {
             mContext.registerReceiver(this, new IntentFilter(ACTION_CHECK_POLICY),
-                    PERMISSION_UNLOCK, null);
+                    PERMISSION_UNLOCK, null, Context.RECEIVER_EXPORTED);
             mIsRegistered = true;
             mHandler.postDelayed(mExpiredRunnable, 3000);
         }

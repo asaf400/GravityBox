@@ -34,11 +34,15 @@ import android.os.Bundle;
 import android.view.ContextThemeWrapper;
 import android.widget.Toast;
 
-import com.theartofdev.edmodo.cropper.CropImage;
+import com.canhub.cropper.CropImage;
+import com.canhub.cropper.CropImageActivity;
+import com.canhub.cropper.CropImageOptions;
+import com.canhub.cropper.CropImageView;
 
 public class PickImageActivity extends GravityBoxActivity {
 
     private static final int REQ_PICK_IMAGE = 1;
+    private static final int REQ_CROP_IMAGE = 2;
 
     public static final String EXTRA_CROP_MODE = "cropMode";
     public static final String EXTRA_ASPECT_X = "aspectX";
@@ -112,7 +116,7 @@ public class PickImageActivity extends GravityBoxActivity {
             } else {
                 sendResult(Activity.RESULT_CANCELED);
             }
-        } else if (requestCode == CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE) {
+        } else if (requestCode == REQ_CROP_IMAGE) {
             if (resultCode == Activity.RESULT_OK) {
                 sendResult(Activity.RESULT_OK);
             } else {
@@ -200,15 +204,25 @@ public class PickImageActivity extends GravityBoxActivity {
     private void cropImage() {
         try {
             Uri uri = Uri.fromFile(mImageFile);
-            CropImage.ActivityBuilder builder = CropImage.activity(uri);
+            CropImageOptions options = new CropImageOptions();
             if (mAspectSize != null) {
-                builder.setAspectRatio(mAspectSize.x, mAspectSize.y);
+                options.fixAspectRatio = true;
+                options.aspectRatioX = mAspectSize.x;
+                options.aspectRatioY = mAspectSize.y;
             }
             if (mOutputSize != null) {
-                builder.setRequestedSize(mOutputSize.x, mOutputSize.y);
+                options.outputRequestWidth = mOutputSize.x;
+                options.outputRequestHeight = mOutputSize.y;
+                options.outputRequestSizeOptions = CropImageView.RequestSizeOptions.RESIZE_INSIDE;
             }
-            builder.setOutputUri(uri);
-            builder.start(this);
+            options.customOutputUri = uri;
+
+            Bundle bundle = new Bundle();
+            bundle.putParcelable(CropImage.CROP_IMAGE_EXTRA_SOURCE, uri);
+            bundle.putParcelable(CropImage.CROP_IMAGE_EXTRA_OPTIONS, options);
+            Intent intent = new Intent(this, CropImageActivity.class);
+            intent.putExtra(CropImage.CROP_IMAGE_EXTRA_BUNDLE, bundle);
+            startActivityForResult(intent, REQ_CROP_IMAGE);
         } catch (Exception e) {
             e.printStackTrace();
             Toast.makeText(this, String.format("%s: %s", getString(R.string.imgpick_crop_error),

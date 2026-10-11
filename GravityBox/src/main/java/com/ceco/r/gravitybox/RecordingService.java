@@ -87,7 +87,7 @@ public class RecordingService extends Service {
         Bitmap b = BitmapFactory.decodeResource(getResources(), R.drawable.ic_qs_qr_recording);
         builder.setLargeIcon(b);
         Intent intent = new Intent(ACTION_RECORDING_STOP);
-        mPendingIntent = PendingIntent.getService(this, 0, intent, 0);
+        mPendingIntent = PendingIntent.getService(this, 0, intent, PendingIntent.FLAG_IMMUTABLE);
         builder.setContentIntent(mPendingIntent);
         mRecordingNotif = builder.build();
     }

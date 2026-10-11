@@ -120,20 +120,16 @@ public class PhoneWrapper {
         }
     };
 
-    private static Class<?> getPhoneFactoryClass() {
-        return XposedHelpers.findClass("com.android.internal.telephony.PhoneFactory", null);
+    private static Class<?> getPhoneFactoryClass(ClassLoader classLoader) {
+        return XposedHelpers.findClassIfExists("com.android.internal.telephony.PhoneFactory", classLoader);
     }
 
-    private static Class<?> getPhoneBaseClass() {
-        return XposedHelpers.findClass("com.android.internal.telephony.Phone", null);
+    private static Class<?> getPhoneBaseClass(ClassLoader classLoader) {
+        return XposedHelpers.findClassIfExists("com.android.internal.telephony.Phone", classLoader);
     }
 
-    private static Class<?> getPhoneProxyClass() {
-        try {
-            return XposedHelpers.findClass("com.android.internal.telephony.PhoneProxy", null);
-        } catch (Throwable t) {
-            return null;
-        }
+    private static Class<?> getPhoneProxyClass(ClassLoader classLoader) {
+        return XposedHelpers.findClassIfExists("com.android.internal.telephony.PhoneProxy", classLoader);
     }
 
     private static Class<?> getTelephonyManagerClass() {
@@ -160,13 +156,17 @@ public class PhoneWrapper {
         }
     }
 
-    public static void initZygote(final XSharedPreferences prefs) {
+    public static void init(final XSharedPreferences prefs, final ClassLoader classLoader) {
         if (DEBUG) log("Entering init state");
 
         try {
-            mClsPhoneFactory = getPhoneFactoryClass();
-            mPhoneBaseClass = getPhoneBaseClass();
-            mPhoneProxyClass = getPhoneProxyClass();
+            final Class<?> phoneFactoryClass = getPhoneFactoryClass(classLoader);
+            final Class<?> phoneBaseClass = getPhoneBaseClass(classLoader);
+            if (phoneFactoryClass == null || phoneBaseClass == null) return;
+
+            mClsPhoneFactory = phoneFactoryClass;
+            mPhoneBaseClass = phoneBaseClass;
+            mPhoneProxyClass = getPhoneProxyClass(classLoader);
             mSystemProperties = XposedHelpers.findClass("android.os.SystemProperties", null);
 
             mSimSlot = 0;
@@ -213,7 +213,7 @@ public class PhoneWrapper {
             IntentFilter intentFilter = new IntentFilter(ACTION_CHANGE_NETWORK_TYPE);
             intentFilter.addAction(GravityBoxSettings.ACTION_PREF_QS_NETWORK_MODE_SIM_SLOT_CHANGED);
             intentFilter.addAction(ACTION_GET_CURRENT_NETWORK_TYPE);
-            mContext.registerReceiver(mBroadcastReceiver, intentFilter);
+            mContext.registerReceiver(mBroadcastReceiver, intentFilter, Context.RECEIVER_EXPORTED);
         }
     }
 

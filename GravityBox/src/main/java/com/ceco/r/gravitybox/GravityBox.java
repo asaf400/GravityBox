@@ -16,6 +16,8 @@
 package com.ceco.r.gravitybox;
 
 import java.io.File;
+import java.util.HashSet;
+import java.util.Set;
 
 import android.os.Build;
 
@@ -61,15 +63,52 @@ public class GravityBox implements IXposedHookZygoteInit, IXposedHookLoadPackage
         log(tag, null, t);
     }
 
-    @Override
-    public void initZygote(StartupParam startupParam) {
-        if (Build.VERSION.SDK_INT != 33) {
+    private static final int REQUIRED_SDK = 36;
+    private static final String SYSTEM_SERVER_PACKAGE_ANDROID = "android";
+    private static final String SYSTEM_SERVER_PACKAGE_SYSTEM = "system";
+
+    private static boolean sProcessInitialized;
+    private static boolean sProcessHooksInstalled;
+    // Vector may report the same package again for secondary classloaders in the same process;
+    // re-running package init there would replace already-initialized static managers.
+    private static final Set<String> sLoadedPackages = new HashSet<>();
+
+    private static boolean isSupportedSdk() {
+        if (Build.VERSION.SDK_INT != REQUIRED_SDK) {
             XposedBridge.log("!!! GravityBox you are running is not designed for "
                     + "Android SDK " + Build.VERSION.SDK_INT + " !!!");
+            return false;
+        }
+        return true;
+    }
+
+    private static boolean isSystemServer(LoadPackageParam lpparam) {
+        final boolean pkgMatches = SYSTEM_SERVER_PACKAGE_ANDROID.equals(lpparam.packageName) ||
+                SYSTEM_SERVER_PACKAGE_SYSTEM.equals(lpparam.packageName);
+        final boolean procMatches = SYSTEM_SERVER_PACKAGE_ANDROID.equals(lpparam.processName) ||
+                SYSTEM_SERVER_PACKAGE_SYSTEM.equals(lpparam.processName) ||
+                "system_server".equals(lpparam.processName);
+        return pkgMatches && procMatches;
+    }
+
+    @Override
+    public void initZygote(StartupParam startupParam) {
+        if (!isSupportedSdk()) {
             return;
         }
 
         MODULE_PATH = startupParam.modulePath;
+        initProcess(startupParam.startsSystemServer);
+    }
+
+    // Vector injects per scoped process and may never call initZygote,
+    // so every entry point must be able to perform process init on its own.
+    private static synchronized void initProcess(boolean startsSystemServer) {
+        if (sProcessInitialized) {
+            return;
+        }
+        sProcessInitialized = true;
+
         if (XposedBridge.getXposedVersion() < 93) {
             prefs = new XSharedPreferences(prefsFileProt);
             uncPrefs = new XSharedPreferences(uncPrefsFileProt);
@@ -89,9 +128,9 @@ public class GravityBox implements IXposedHookZygoteInit, IXposedHookLoadPackage
             tunerPrefs.makeWorldReadable();
             tunerPrefs.reload();
         }
-        LOG_ERRORS = prefs.getBoolean(GravityBoxSettings.PREF_KEY_LOG_ERRORS, false);
+        LOG_ERRORS = prefs.getBoolean(GravityBoxSettings.PREF_KEY_LOG_ERRORS, true);
 
-        if (startupParam.startsSystemServer) {
+        if (startsSystemServer) {
             XposedBridge.log("GB:Hardware: " + Build.HARDWARE);
             XposedBridge.log("GB:Product: " + Build.PRODUCT);
             XposedBridge.log("GB:Device manufacturer: " + Build.MANUFACTURER);
@@ -114,21 +153,40 @@ public class GravityBox implements IXposedHookZygoteInit, IXposedHookLoadPackage
 
         SysUiTunerManager.initUserItemsCache(tunerPrefs);
         SystemWideResources.initResources(prefs, tunerPrefs);
+    }
 
-        // Common
-        ModInputMethod.initZygote(prefs);
-        PhoneWrapper.initZygote(prefs);
-        ModTelephony.initZygote(prefs);
+    // Hooks that used to be installed once in zygote; now installed once per injected process.
+    private static synchronized void installProcessHooks(LoadPackageParam lpparam) {
+        if (sProcessHooksInstalled) {
+            return;
+        }
+        sProcessHooksInstalled = true;
+
+        ModInputMethod.init(prefs, lpparam.classLoader);
+        PhoneWrapper.init(prefs, lpparam.classLoader);
+        ModTelephony.init(prefs, lpparam.classLoader);
     }
 
     @Override
     public void handleLoadPackage(LoadPackageParam lpparam) {
-        if (Build.VERSION.SDK_INT != 33) {
+        if (!isSupportedSdk()) {
             return;
         }
 
-        if (lpparam.packageName.equals("android") &&
-                lpparam.processName.equals("android")) {
+        synchronized (sLoadedPackages) {
+            if (!sLoadedPackages.add(lpparam.packageName)) {
+                return;
+            }
+        }
+
+        final boolean isSystemServer = isSystemServer(lpparam);
+        XposedBridge.log("GB:Loaded into package=" + lpparam.packageName +
+                " process=" + lpparam.processName + " SDK=" + Build.VERSION.SDK_INT);
+
+        initProcess(isSystemServer);
+        installProcessHooks(lpparam);
+
+        if (isSystemServer) {
             FrameworkManagers.initAndroid(lpparam.classLoader);
             ModVolumeKeySkipTrack.initAndroid(prefs, lpparam.classLoader);
             ModHwKeys.initAndroid(prefs, lpparam.classLoader);

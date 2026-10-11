@@ -140,7 +140,7 @@ public class CallFeatures {
         mWakeLock  = pm.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, TAG);
 
         IntentFilter intentFilter = new IntentFilter(GravityBoxSettings.ACTION_PREF_CALL_FEATURES_CHANGED);
-        mContext.registerReceiver(mBroadcastReceiver, intentFilter);
+        mContext.registerReceiver(mBroadcastReceiver, intentFilter, Context.RECEIVER_EXPORTED);
     }
 
     private void onCallAdded(Object call) {

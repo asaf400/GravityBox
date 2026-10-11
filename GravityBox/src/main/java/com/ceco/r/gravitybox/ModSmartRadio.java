@@ -428,7 +428,8 @@ public class ModSmartRadio {
 
         private void scheduleAlarm() {
             Intent intent = new Intent(ACTION_CHANGE_MODE_ALARM);
-            mPendingIntent = PendingIntent.getBroadcast(mContext, 1, intent, PendingIntent.FLAG_ONE_SHOT);
+            mPendingIntent = PendingIntent.getBroadcast(mContext, 1, intent,
+                    PendingIntent.FLAG_ONE_SHOT | PendingIntent.FLAG_IMMUTABLE);
             long triggerAtMillis = System.currentTimeMillis() + mScreenOffDelay*60*1000;
             mAlarmManager.setExact(AlarmManager.RTC_WAKEUP, triggerAtMillis, mPendingIntent);
             mLinkActivity.timestamp = System.currentTimeMillis();

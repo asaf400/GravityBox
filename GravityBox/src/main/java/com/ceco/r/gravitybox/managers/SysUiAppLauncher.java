@@ -135,7 +135,7 @@ public class SysUiAppLauncher implements BroadcastMediator.Receiver, SysUiConfig
 
         IntentFilter intentFilter = new IntentFilter(Intent.ACTION_PACKAGE_FULLY_REMOVED);
         intentFilter.addDataScheme("package");
-        mContext.registerReceiver(mPackageRemoveReceiver, intentFilter);
+        mContext.registerReceiver(mPackageRemoveReceiver, intentFilter, Context.RECEIVER_EXPORTED);
 
         SysUiManagers.BroadcastMediator.subscribe(this,
                 GravityBoxSettings.ACTION_PREF_APP_LAUNCHER_CHANGED,

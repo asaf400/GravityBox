@@ -53,10 +53,11 @@ public class ModTelephony {
         }
     };
 
-    public static void initZygote(final XSharedPreferences prefs) {
+    public static void init(final XSharedPreferences prefs, final ClassLoader classLoader) {
         try {
             final Class<?> classServiceStateTracker = 
-                    XposedHelpers.findClass(CLASS_SERVICE_STATE_TRACKER, null);
+                    XposedHelpers.findClassIfExists(CLASS_SERVICE_STATE_TRACKER, classLoader);
+            if (classServiceStateTracker == null) return;
 
             mNationalRoamingEnabled = prefs.getBoolean(GravityBoxSettings.PREF_KEY_NATIONAL_ROAMING, false);
 
@@ -68,14 +69,14 @@ public class ModTelephony {
                         Context context = (Context) XposedHelpers.callMethod(phone, "getContext");
                         IntentFilter intentFilter = new IntentFilter();
                         intentFilter.addAction(GravityBoxSettings.ACTION_PREF_TELEPHONY_CHANGED);
-                        context.registerReceiver(mBroadcastReceiver, intentFilter);
+                        context.registerReceiver(mBroadcastReceiver, intentFilter, Context.RECEIVER_EXPORTED);
                         if (DEBUG) log("ServiceStateTracker constructed; broadcast receiver registered");
                     }
                 }
             });
 
             if (Utils.hasGeminiSupport()) {
-                XposedHelpers.findAndHookMethod(CLASS_SERVICE_STATE_EXT, null, "ignoreDomesticRoaming", 
+                XposedHelpers.findAndHookMethod(CLASS_SERVICE_STATE_EXT, classLoader, "ignoreDomesticRoaming", 
                         new XC_MethodReplacement() {
                     @Override
                     protected Object replaceHookedMethod(MethodHookParam param) {
@@ -110,7 +111,7 @@ public class ModTelephony {
                     }
                 });
 
-                XposedHelpers.findAndHookMethod(CLASS_PHONE_BASE, null,
+                XposedHelpers.findAndHookMethod(CLASS_PHONE_BASE, classLoader,
                         "isMccMncMarkedAsRoaming", String.class, new XC_MethodHook() {
                     @Override
                     protected void afterHookedMethod(MethodHookParam param) {

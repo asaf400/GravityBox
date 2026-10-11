@@ -93,7 +93,8 @@ public class ModDialerOOS {
                     if (DEBUG) log("DialpadFragment: onResume");
                     Context ctx = (Context) XposedHelpers.callMethod(param.thisObject, "getActivity");
                     ctx.registerReceiver(mBroadcastReceiver,
-                            new IntentFilter(QuietHoursActivity.ACTION_QUIET_HOURS_CHANGED));
+                            new IntentFilter(QuietHoursActivity.ACTION_QUIET_HOURS_CHANGED),
+                            Context.RECEIVER_EXPORTED);
                     Intent i = new Intent(QuietHoursActivity.ACTION_QUIET_HOURS_CHANGED);
                     i.setComponent(new ComponentName(GravityBox.PACKAGE_NAME,
                             GravityBoxService.class.getName()));
