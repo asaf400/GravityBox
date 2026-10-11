@@ -16,7 +16,7 @@
 
 <resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
 
-    <string name="app_name" translatable="false">GravityBox [16]</string>
+    <string name="app_name" translatable="false">GravityBox [15]</string>
 
     <string name="battery_style_title">Battery indicator style</string>
     <string name="battery_style_stock">Stock battery indicator</string>

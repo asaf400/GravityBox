@@ -28,7 +28,7 @@ import android.view.WindowInsets;
 import androidx.appcompat.app.AppCompatActivity;
 
 /**
- * Android 16 draws window content behind the action bar. Pad the content so
+ * Android 15+ draws window content behind the action bar. Pad the content so
  * lists stay below the title and above the navigation bar.
  */
 public final class ActivityContentInsets {
