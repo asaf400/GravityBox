@@ -22,6 +22,7 @@ import java.util.Locale;
 import java.util.Set;
 import java.util.TreeSet;
 
+import com.ceco.r.gravitybox.ActivityContentInsets;
 import com.ceco.r.gravitybox.GravityBoxActivity;
 import com.ceco.r.gravitybox.R;
 import com.ceco.r.gravitybox.SettingsManager;
@@ -216,6 +217,7 @@ public class QuietHoursRangeActivity extends GravityBoxActivity {
 
         @Override
         public boolean onPreferenceTreeClick(PreferenceScreen preferenceScreen, Preference preference) {
+            ActivityContentInsets.onPreferenceTreeClick(preference);
             if (preference == mPrefRingerWhitelist) {
                 Set<String> whiteList = mRange.ringerWhitelist;
                 if (mIsNew) {

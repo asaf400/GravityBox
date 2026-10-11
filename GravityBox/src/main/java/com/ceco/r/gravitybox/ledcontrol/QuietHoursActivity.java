@@ -20,6 +20,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import com.ceco.r.gravitybox.ActivityContentInsets;
 import com.ceco.r.gravitybox.R;
 import com.ceco.r.gravitybox.GravityBoxActivity;
 import com.ceco.r.gravitybox.SettingsManager;
@@ -259,6 +260,7 @@ public class QuietHoursActivity extends GravityBoxActivity {
         @Override
         public boolean onPreferenceTreeClick(PreferenceScreen preferenceScreen,
                 Preference preference) {
+            ActivityContentInsets.onPreferenceTreeClick(preference);
             if (preference == mPrefRingerWhitelist) {
                 Intent intent = new Intent(getActivity(), RingerWhitelistActivity.class);
                 intent.putStringArrayListExtra(EXTRA_QH_RINGER_WHITELIST,

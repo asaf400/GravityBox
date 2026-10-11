@@ -20,6 +20,7 @@ import net.margaritov.preference.colorpicker.ColorPickerPreference;
 import java.util.Arrays;
 import java.util.HashSet;
 
+import com.ceco.r.gravitybox.ActivityContentInsets;
 import com.ceco.r.gravitybox.R;
 import com.ceco.r.gravitybox.ProgressBarController;
 import com.ceco.r.gravitybox.ledcontrol.LedSettings.ActiveScreenMode;
@@ -385,6 +386,7 @@ public class LedSettingsFragment extends PreferenceFragment implements OnPrefere
 
     @Override
     public boolean onPreferenceTreeClick(PreferenceScreen prefScreen, Preference pref) {
+        ActivityContentInsets.onPreferenceTreeClick(pref);
         if (pref == mNotifSoundPref) {
             Intent intent = new Intent(RingtoneManager.ACTION_RINGTONE_PICKER);
             intent.putExtra(RingtoneManager.EXTRA_RINGTONE_EXISTING_URI, mSoundUri);

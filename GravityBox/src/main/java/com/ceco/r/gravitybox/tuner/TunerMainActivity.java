@@ -25,6 +25,7 @@ import android.preference.PreferenceScreen;
 import android.view.View;
 import android.widget.TextView;
 
+import com.ceco.r.gravitybox.ActivityContentInsets;
 import com.ceco.r.gravitybox.GravityBoxActivity;
 import com.ceco.r.gravitybox.R;
 import com.ceco.r.gravitybox.SettingsManager;
@@ -102,6 +103,7 @@ public class TunerMainActivity extends GravityBoxActivity {
 
         @Override
         public boolean onPreferenceTreeClick(PreferenceScreen prefScreen, Preference pref) {
+            ActivityContentInsets.onPreferenceTreeClick(pref);
             final String key = pref.getKey();
             if (PREF_KEY_FRAMEWORK.equals(key)) {
                 Intent intent = new Intent(getActivity(), TunerCategoryActivity.class);

@@ -15,6 +15,7 @@
 
 package com.ceco.r.gravitybox.ledcontrol;
 
+import com.ceco.r.gravitybox.ActivityContentInsets;
 import com.ceco.r.gravitybox.R;
 import com.ceco.r.gravitybox.GravityBoxActivity;
 
@@ -76,6 +77,7 @@ public class LedMainActivity extends GravityBoxActivity {
 
         @Override
         public boolean onPreferenceTreeClick(PreferenceScreen prefScreen, Preference pref) {
+            ActivityContentInsets.onPreferenceTreeClick(pref);
             final String key = pref.getKey();
             if (PREF_KEY_DEFAULT_SETTINGS.equals(key)) {
                 Intent intent = new Intent(getActivity(), LedSettingsActivity.class);

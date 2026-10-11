@@ -39,6 +39,8 @@ public class GravityBoxAppCompatActivity extends AppCompatActivity {
                 setTitle(labelRes);
             }
         } catch (NameNotFoundException e) { /* ignore */ }
+
+        ActivityContentInsets.install(this);
     }
 
     @Override

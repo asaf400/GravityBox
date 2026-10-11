@@ -39,6 +39,8 @@ public class GravityBoxListActivity extends ListActivity {
                 setTitle(labelRes);
             }
         } catch (NameNotFoundException e) { /* ignore */ }
+
+        ActivityContentInsets.install(this);
     }
 
     @Override

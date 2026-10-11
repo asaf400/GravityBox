@@ -3393,6 +3393,7 @@ public class GravityBoxSettings extends GravityBoxActivity implements GravityBox
         @SuppressLint("SetWorldReadable")
         @Override
         public boolean onPreferenceTreeClick(PreferenceScreen prefScreen, Preference pref) {
+            ActivityContentInsets.onPreferenceTreeClick(pref);
             Intent intent = null;
 
             if (pref == mPrefAboutGb) {
