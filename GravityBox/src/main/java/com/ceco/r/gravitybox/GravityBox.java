@@ -63,7 +63,7 @@ public class GravityBox implements IXposedHookZygoteInit, IXposedHookLoadPackage
         log(tag, null, t);
     }
 
-    private static final int REQUIRED_SDK = 36;
+    private static final int REQUIRED_SDK = 37;
     private static final String SYSTEM_SERVER_PACKAGE_ANDROID = "android";
     private static final String SYSTEM_SERVER_PACKAGE_SYSTEM = "system";
 
